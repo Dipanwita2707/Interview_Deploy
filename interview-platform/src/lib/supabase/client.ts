@@ -10,9 +10,12 @@ let client: ReturnType<typeof createBrowserClient<Database>> | null = null;
 export function createClient() {
   if (client) return client;
 
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "http://127.0.0.1:54321";
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "dummy-anon-key";
+
   client = createBrowserClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    url,
+    anonKey,
     {
       auth: {
         // Bypass navigator.locks to prevent AbortError on public pages
