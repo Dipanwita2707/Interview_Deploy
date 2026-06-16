@@ -4,7 +4,7 @@ services:
   # Next.js Application Core
   aural-app:
     build:
-      context: ../../aural-oss
+      context: ../../interview-platform
       dockerfile: Dockerfile
     container_name: aural-web-app
     environment:
@@ -32,7 +32,7 @@ services:
 
   aural-voice-relay-doubao:
     build:
-      context: ../../aural-oss
+      context: ../../interview-platform
       dockerfile: Dockerfile
     container_name: aural-voice-relay-doubao
     command: npx tsx server/voice-relay.ts
@@ -48,7 +48,7 @@ services:
 
   aural-voice-relay-azure:
     build:
-      context: ../../aural-oss
+      context: ../../interview-platform
       dockerfile: Dockerfile
     container_name: aural-voice-relay-azure
     command: npx tsx server/openai-voice-relay.ts
@@ -63,7 +63,7 @@ services:
 
   aural-voice-relay-azure-speech:
     build:
-      context: ../../aural-oss
+      context: ../../interview-platform
       dockerfile: Dockerfile
     container_name: aural-voice-relay-azure-speech
     command: npx tsx server/azure-speech-relay.ts
