@@ -1,4 +1,6 @@
-export default function AuthLayout({
+import React from "react";
+
+export function AuthLayoutShared({
   children,
 }: {
   children: React.ReactNode;

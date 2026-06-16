@@ -4,7 +4,7 @@ import { useAppLocale } from "@/components/app-locale-provider";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 
-export default function DashboardError({
+export default function GlobalError({
   error,
   reset,
 }: {
@@ -15,7 +15,7 @@ export default function DashboardError({
   const isZh = locale === "zh";
 
   useEffect(() => {
-    console.error("Dashboard error:", error);
+    console.error("Application error:", error);
   }, [error]);
 
   return (

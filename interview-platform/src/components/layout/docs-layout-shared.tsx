@@ -1,4 +1,6 @@
-export default function DocsLayout({
+import React from "react";
+
+export function DocsLayoutShared({
   children,
 }: {
   children: React.ReactNode;

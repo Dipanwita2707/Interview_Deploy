@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight, Building2, Settings, Users } from "lucide-react";
 
-export default function SettingsLayout({
+export default function SettingsClientLayout({
   children,
 }: {
   children: React.ReactNode;

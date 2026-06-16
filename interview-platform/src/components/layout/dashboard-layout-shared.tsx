@@ -1,8 +1,9 @@
 import { DashboardShell } from "@/components/layout/sidebar";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import React from "react";
 
-export default async function DashboardLayout({
+export async function DashboardLayoutShared({
   children,
 }: {
   children: React.ReactNode;
