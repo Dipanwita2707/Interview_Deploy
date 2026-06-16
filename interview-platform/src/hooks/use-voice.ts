@@ -377,10 +377,21 @@ export function useVoice({
 
       relayConnectorRef.current?.close();
 
+      // Auto-upgrade ws:// → wss:// when the page is served over HTTPS.
+      // This avoids Mixed Content blocks when NEXT_PUBLIC_VOICE_RELAY_URL
+      // is still set to ws:// in the baked env var.
+      const upgradeWs = (url?: string) => {
+        if (!url) return url;
+        if (typeof window !== "undefined" && window.location.protocol === "https:") {
+          return url.replace(/^ws:/, "wss:");
+        }
+        return url;
+      };
+
       const targets = buildRelayTargets({
         language: interviewContext.language,
-        voiceRelayUrl: process.env.NEXT_PUBLIC_VOICE_RELAY_URL,
-        openAiRelayUrl: process.env.NEXT_PUBLIC_OPENAI_VOICE_RELAY_URL,
+        voiceRelayUrl: upgradeWs(process.env.NEXT_PUBLIC_VOICE_RELAY_URL),
+        openAiRelayUrl: upgradeWs(process.env.NEXT_PUBLIC_OPENAI_VOICE_RELAY_URL),
         primaryPreference: resolveRelayPrimaryPreference(
           process.env.NEXT_PUBLIC_VOICE_RELAY_PRIMARY,
         ),

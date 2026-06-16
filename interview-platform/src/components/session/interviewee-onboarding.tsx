@@ -721,11 +721,19 @@ function MicCheck({ done, onDone, language, allowSkip = true }: { done: boolean;
       }
     };
 
+    const upgradeWs = (url?: string) => {
+      if (!url) return url;
+      if (window.location.protocol === "https:") {
+        return url.replace(/^ws:/, "wss:");
+      }
+      return url;
+    };
+
     const connector = new RelayConnector<Record<string, unknown>>({
       targets: buildRelayTargets({
         language: languageRef.current,
-        voiceRelayUrl: process.env.NEXT_PUBLIC_VOICE_RELAY_URL,
-        openAiRelayUrl: process.env.NEXT_PUBLIC_OPENAI_VOICE_RELAY_URL,
+        voiceRelayUrl: upgradeWs(process.env.NEXT_PUBLIC_VOICE_RELAY_URL),
+        openAiRelayUrl: upgradeWs(process.env.NEXT_PUBLIC_OPENAI_VOICE_RELAY_URL),
         primaryPreference: resolveRelayPrimaryPreference(
           process.env.NEXT_PUBLIC_VOICE_RELAY_PRIMARY,
         ),
