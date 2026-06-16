@@ -26,6 +26,7 @@ services:
       # Voice Relay endpoints pointing to this VM's hostname/IP
       NEXT_PUBLIC_VOICE_RELAY_URL: ${NEXT_PUBLIC_VOICE_RELAY_URL}
       NEXT_PUBLIC_OPENAI_VOICE_RELAY_URL: ${NEXT_PUBLIC_OPENAI_VOICE_RELAY_URL}
+      NEXT_PUBLIC_AZURE_SPEECH_RELAY_URL: ${NEXT_PUBLIC_AZURE_SPEECH_RELAY_URL}
       NEXT_PUBLIC_VOICE_RELAY_PRIMARY: ${NEXT_PUBLIC_VOICE_RELAY_PRIMARY:-auto}
     restart: unless-stopped
 
@@ -58,6 +59,20 @@ services:
       AZURE_OPENAI_API_KEY: ${AZURE_OPENAI_API_KEY}
       AZURE_OPENAI_DEPLOYMENT: ${AZURE_OPENAI_DEPLOYMENT:-gpt-4o-realtime-preview}
       AZURE_OPENAI_VOICE: ${AZURE_OPENAI_VOICE:-alloy}
+    restart: unless-stopped
+
+  aural-voice-relay-azure-speech:
+    build:
+      context: ../../aural-oss
+      dockerfile: Dockerfile
+    container_name: aural-voice-relay-azure-speech
+    command: npx tsx server/azure-speech-relay.ts
+    environment:
+      NODE_ENV: production
+      AZURE_SPEECH_RELAY_PORT: 8083
+      AZURE_SPEECH_KEY: ${AZURE_SPEECH_KEY}
+      AZURE_SPEECH_REGION: ${AZURE_SPEECH_REGION}
+      AZURE_SPEECH_VOICE: ${AZURE_SPEECH_VOICE:-en-US-JennyNeural}
     restart: unless-stopped
 
   nginx:
