@@ -93,6 +93,7 @@ services:
       args:
         # Browser accessible API URL (e.g. http://your-vm-ip/api)
         NEXT_PUBLIC_API_URL: ${CODING_PUBLIC_API_URL}
+        NEXT_PUBLIC_DEV_LOGIN: ${NEXT_PUBLIC_DEV_LOGIN:-true}
     container_name: coding-frontend-client
     environment:
       NODE_ENV: production
