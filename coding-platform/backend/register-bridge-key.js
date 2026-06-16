@@ -8,8 +8,11 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
-// Dynamically load from aural-oss/.env file
-const envPath = path.join(__dirname, '../../aural-oss/.env');
+// Dynamically load from interview-platform/.env or aural-oss/.env file
+let envPath = path.join(__dirname, '../../interview-platform/.env');
+if (!fs.existsSync(envPath)) {
+  envPath = path.join(__dirname, '../../aural-oss/.env');
+}
 let SUPABASE_URL = '';
 let SERVICE_ROLE_KEY = '';
 
