@@ -8,7 +8,10 @@
     "http://localhost:3000/*",
     "http://localhost:3001/*",
     "https://*.smart-platform.com/*",
-    "https://*.smartcampus.edu/*"
+    "https://*.smartcampus.edu/*",
+    "https://20.219.161.91/*",
+    "https://4.224.31.8/*",
+    "https://*/*"
   ],
 
   "content_scripts": [
@@ -17,7 +20,10 @@
         "http://localhost:3000/exam/*",
         "http://localhost:3001/exam/*",
         "https://*.smart-platform.com/exam/*",
-        "https://*.smartcampus.edu/exam/*"
+        "https://*.smartcampus.edu/exam/*",
+        "https://20.219.161.91/exam/*",
+        "https://4.224.31.8/exam/*",
+        "https://*/exam/*"
       ],
       "js": ["content.js"],
       "run_at": "document_start",
