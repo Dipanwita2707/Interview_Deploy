@@ -31,6 +31,8 @@ services:
       OPENAI_BASE_URL: ${OPENAI_BASE_URL}
       KIMI_API_KEY: ${KIMI_API_KEY}
       MINIMAX_API_KEY: ${MINIMAX_API_KEY}
+      # Sarvam AI (TTS/STT for mic test and voice synthesis)
+      SARVAM_API_KEY: ${SARVAM_API_KEY}
       # Voice Relay endpoints pointing to this VM's hostname/IP
       NEXT_PUBLIC_VOICE_RELAY_URL: ${NEXT_PUBLIC_VOICE_RELAY_URL}
       NEXT_PUBLIC_OPENAI_VOICE_RELAY_URL: ${NEXT_PUBLIC_OPENAI_VOICE_RELAY_URL}
