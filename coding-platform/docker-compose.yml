@@ -1,0 +1,72 @@
+version: '3.8'
+
+# ── Coding Platform — Docker Compose ──────────────────────────
+# Uses Neon cloud Postgres (no local DB container needed)
+# Redis is optional — app works without it
+# Judge0 skipped — requires Linux cgroups v1, won't run on macOS Docker Desktop
+
+services:
+
+  # ─── Redis (optional — enables BullMQ queues) ─────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: cp-redis
+    ports:
+      - "6380:6379"
+    volumes:
+      - cp_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ─── Backend API ───────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cp-backend
+    ports:
+      - "5002:5002"
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      PORT: 5002
+      NODE_ENV: production
+      # Neon cloud DB — same as local dev
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: redis://redis:6379
+      JUDGE0_URL: ""
+      JWT_SECRET: ${JWT_SECRET:-your-coding-platform-jwt-secret-change-in-production}
+      SMART_SSO_SECRET: ${SMART_SSO_SECRET:-cgpms_jwt_secret_2026_super_secure}
+      SMART_API_URL: http://host.docker.internal:4000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:5002/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── Frontend ──────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Baked at build time — must be browser-accessible URL
+        NEXT_PUBLIC_API_URL: http://localhost:5002/api
+    container_name: cp-frontend
+    ports:
+      - "3001:3001"
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+    restart: unless-stopped
+
+volumes:
+  cp_redis_data:
+

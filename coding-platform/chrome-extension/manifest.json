@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "SMART Proctor Guard",
+  "version": "1.0.0",
+  "description": "Ensures exam integrity for the SMART Coding Platform. Blocks clipboard, function keys, and DevTools during proctored exams.",
+
+  "host_permissions": [
+    "http://localhost:3000/*",
+    "http://localhost:3001/*",
+    "https://*.smart-platform.com/*",
+    "https://*.smartcampus.edu/*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": [
+        "http://localhost:3000/exam/*",
+        "http://localhost:3001/exam/*",
+        "https://*.smart-platform.com/exam/*",
+        "https://*.smartcampus.edu/exam/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    }
+  ],
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "permissions": ["tabs", "storage"],
+
+  "icons": {
+    "16":  "icons/icon16.png",
+    "48":  "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "SMART Proctor Guard",
+    "default_icon": {
+      "16":  "icons/icon16.png",
+      "48":  "icons/icon48.png"
+    }
+  }
+}

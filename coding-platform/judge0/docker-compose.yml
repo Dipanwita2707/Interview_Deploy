@@ -1,0 +1,69 @@
+# Judge0 CE — Self-Hosted
+# Deploy this on your server:
+#   1. Copy this file to your server
+#   2. docker compose up -d
+#   3. Judge0 will be available on port 2358
+#
+# Judge0 CE source: https://github.com/judge0/judge0
+# Requires: Docker + Docker Compose, ~2GB RAM, privileged containers
+
+version: '3.8'
+
+services:
+
+  judge0-server:
+    image: judge0/judge0:1.13.1
+    container_name: judge0-server
+    ports:
+      - "2358:2358"
+    volumes:
+      - ./judge0.conf:/judge0.conf:ro
+    privileged: true
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  judge0-workers:
+    image: judge0/judge0:1.13.1
+    container_name: judge0-workers
+    command: ["./scripts/workers"]
+    volumes:
+      - ./judge0.conf:/judge0.conf:ro
+    privileged: true
+    restart: unless-stopped
+    depends_on:
+      judge0-server:
+        condition: service_started
+
+  db:
+    image: postgres:16-alpine
+    container_name: judge0-db
+    environment:
+      POSTGRES_DB: judge0
+      POSTGRES_USER: judge0
+      POSTGRES_PASSWORD: judge0password
+    volumes:
+      - judge0_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U judge0"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: judge0-redis
+    volumes:
+      - judge0_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  judge0_pgdata:
+  judge0_redis_data:

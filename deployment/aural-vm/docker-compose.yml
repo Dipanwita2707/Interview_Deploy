@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # Next.js Application Core
+  aural-app:
+    build:
+      context: ../../aural-oss
+      dockerfile: Dockerfile
+    container_name: aural-web-app
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_APP_URL: ${AURAL_APP_URL}
+      # Cloud DB Connection String (e.g. Neon / Azure PG / Supabase PG)
+      DATABASE_URL: ${DATABASE_URL}
+      # Supabase Cloud Integration / Auth keys (if used)
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      # LLM Keys
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL}
+      KIMI_API_KEY: ${KIMI_API_KEY}
+      MINIMAX_API_KEY: ${MINIMAX_API_KEY}
+      # Voice Relay endpoints pointing to this VM's hostname/IP
+      NEXT_PUBLIC_VOICE_RELAY_URL: ${NEXT_PUBLIC_VOICE_RELAY_URL}
+      NEXT_PUBLIC_OPENAI_VOICE_RELAY_URL: ${NEXT_PUBLIC_OPENAI_VOICE_RELAY_URL}
+      NEXT_PUBLIC_VOICE_RELAY_PRIMARY: ${NEXT_PUBLIC_VOICE_RELAY_PRIMARY:-auto}
+    restart: unless-stopped
+
+  aural-voice-relay-doubao:
+    build:
+      context: ../../aural-oss
+      dockerfile: Dockerfile
+    container_name: aural-voice-relay-doubao
+    command: npx tsx server/voice-relay.ts
+    environment:
+      NODE_ENV: production
+      VOICE_RELAY_PORT: 8081
+      DOUBAO_APP_ID: ${DOUBAO_APP_ID}
+      DOUBAO_ACCESS_TOKEN: ${DOUBAO_ACCESS_TOKEN}
+      DOUBAO_SECRET_KEY: ${DOUBAO_SECRET_KEY}
+      DOUBAO_APP_KEY: ${DOUBAO_APP_KEY}
+      DOUBAO_RESOURCE_ID: ${DOUBAO_RESOURCE_ID}
+    restart: unless-stopped
+
+  aural-voice-relay-azure:
+    build:
+      context: ../../aural-oss
+      dockerfile: Dockerfile
+    container_name: aural-voice-relay-azure
+    command: npx tsx server/openai-voice-relay.ts
+    environment:
+      NODE_ENV: production
+      OPENAI_VOICE_RELAY_PORT: 8082
+      AZURE_OPENAI_ENDPOINT: ${AZURE_OPENAI_ENDPOINT}
+      AZURE_OPENAI_API_KEY: ${AZURE_OPENAI_API_KEY}
+      AZURE_OPENAI_DEPLOYMENT: ${AZURE_OPENAI_DEPLOYMENT:-gpt-4o-realtime-preview}
+      AZURE_OPENAI_VOICE: ${AZURE_OPENAI_VOICE:-alloy}
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: aural-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - aural-app
+    restart: unless-stopped

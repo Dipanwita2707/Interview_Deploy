@@ -1,0 +1,119 @@
+version: '3.8'
+
+services:
+  # ============================================================
+  # 1. Compiler Sandbox Backend (Judge0 + local DB/Redis)
+  # ============================================================
+  # Note: A local DB/Redis is run on VM 2 exclusively for Judge0. 
+  # This keeps sandbox compiler executions separate from your main cloud DB.
+  db-judge0:
+    image: postgres:15-alpine
+    container_name: local-judge0-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: judge0_sandbox_password
+      POSTGRES_DB: judge0
+    volumes:
+      - judge0_db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: local-coding-redis
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  judge0:
+    image: judge0/judge0:1.13.0
+    container_name: local-judge0-sandbox
+    privileged: true
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      POSTGRES_HOST: db-judge0
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: judge0_sandbox_password
+      POSTGRES_DB: judge0
+    depends_on:
+      db-judge0:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ============================================================
+  # 2. SMART Coding Platform (Connects to Cloud DB)
+  # ============================================================
+  coding-backend:
+    build:
+      context: ../../coding-platform/backend
+      dockerfile: Dockerfile
+    container_name: coding-backend-api
+    environment:
+      PORT: 5002
+      NODE_ENV: production
+      # Main Cloud Database URL (Passed via your VM's .env file)
+      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_POOL_MIN: 5
+      DATABASE_POOL_MAX: 20
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET:-your-coding-platform-jwt-secret-change-in-production}
+      SMART_SSO_SECRET: ${SMART_SSO_SECRET:-cgpms_jwt_secret_2026_super_secure}
+      # URL referencing internal judge0 sandbox
+      JUDGE0_URL: http://judge0:2358
+      # Aural Bridge integration keys (local dev key bypass allows seamless local link)
+      AURAL_OSS_BRIDGE_URL: ${AURAL_OSS_BRIDGE_URL}
+      AURAL_OSS_SERVICE_KEY: ${AURAL_OSS_SERVICE_KEY:-cp-bridge-de53f7288acfac071fdf8298d67f597cab0e3f6b951678f2}
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:5002/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  coding-frontend:
+    build:
+      context: ../../coding-platform/frontend
+      dockerfile: Dockerfile
+      args:
+        # Browser accessible API URL (e.g. http://your-vm-ip/api)
+        NEXT_PUBLIC_API_URL: ${CODING_PUBLIC_API_URL}
+    container_name: coding-frontend-client
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+    depends_on:
+      coding-backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: coding-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - coding-frontend
+    restart: unless-stopped
+
+volumes:
+  judge0_db_data:
+  redis_data:
