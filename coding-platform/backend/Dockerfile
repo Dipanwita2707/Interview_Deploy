@@ -1,9 +1,9 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Install dependencies
+# Install build tools needed by native Node modules (tree-sitter, etc.)
 COPY package.json package-lock.json* ./
-RUN npm ci
+RUN apk add --no-cache python3 make g++ && npm ci
 
 # Copy source and compile TypeScript
 COPY . .
@@ -15,9 +15,9 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Install only production deps
+# Install build tools + production deps
 COPY package.json package-lock.json* ./
-RUN npm ci --omit=dev
+RUN apk add --no-cache python3 make g++ && npm ci --omit=dev
 
 # Copy compiled JS and schema
 COPY --from=builder /app/dist ./dist

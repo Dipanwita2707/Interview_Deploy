@@ -102,8 +102,23 @@ cat << AURAL_BOOTSTRAP_EOF
 
    # Aural Application details
    AURAL_APP_URL=http://$AURAL_IP
-   NEXT_PUBLIC_VOICE_RELAY_URL=ws://$AURAL_IP/voice-relay
+   NEXT_PUBLIC_VOICE_RELAY_URL=ws://$AURAL_IP/azure-voice-relay
    NEXT_PUBLIC_OPENAI_VOICE_RELAY_URL=ws://$AURAL_IP/openai-voice-relay
+   NEXT_PUBLIC_VOICE_RELAY_PRIMARY=voice
+
+   # Azure Speech Service (Primary Voice Relay)
+   AZURE_SPEECH_KEY=your-azure-speech-key
+   AZURE_SPEECH_REGION=your-azure-speech-region
+   AZURE_SPEECH_VOICE=en-US-JennyNeural
+
+   # Azure OpenAI Realtime (Backup Voice Relay)
+   AZURE_OPENAI_ENDPOINT=https://your-resource-name.openai.azure.com/
+   AZURE_OPENAI_API_KEY=your-azure-openai-key
+   AZURE_OPENAI_REALTIME_DEPLOYMENT=gpt-4o-realtime-preview
+   AZURE_OPENAI_VOICE=alloy
+
+   # Sarvam AI (For onboarding TTS/STT checks)
+   SARVAM_API_KEY=your-sarvam-key
 
    # AI integration credentials
    OPENAI_API_KEY=sk-proj-xxxxxx

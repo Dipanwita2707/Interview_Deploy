@@ -1,6 +1,8 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
+# Install build tools needed by native Node modules (utf-8-validate, etc.)
+RUN apk add --no-cache python3 make g++
 RUN npm ci
 COPY . .
 # Disable Next telemetry and build
