@@ -45,10 +45,11 @@ router.post('/sso/exchange', ssoLimiter, validate(ssoExchangeSchema), async (req
   }
 });
 
-// ─── Dev Login (NODE_ENV=development only) ───────────────────
+// ─── Dev Login (development or ALLOW_DEV_LOGIN=true only) ───────────────────
 // POST /api/auth/dev-login  { email, password }
 router.post('/dev-login', async (req, res: Response) => {
-  if (process.env.NODE_ENV !== 'development') {
+  const devLoginAllowed = process.env.NODE_ENV === 'development' || process.env.ALLOW_DEV_LOGIN === 'true';
+  if (!devLoginAllowed) {
     return res.status(403).json({ success: false, error: 'Not available in production' });
   }
 

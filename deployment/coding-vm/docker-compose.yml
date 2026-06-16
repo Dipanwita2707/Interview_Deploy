@@ -76,6 +76,8 @@ services:
       # Aural Bridge integration keys (local dev key bypass allows seamless local link)
       AURAL_OSS_BRIDGE_URL: ${AURAL_OSS_BRIDGE_URL}
       AURAL_OSS_SERVICE_KEY: ${AURAL_OSS_SERVICE_KEY:-cp-bridge-de53f7288acfac071fdf8298d67f597cab0e3f6b951678f2}
+      # Allow email/password dev login in production (set to false to disable)
+      ALLOW_DEV_LOGIN: ${ALLOW_DEV_LOGIN:-true}
     depends_on:
       redis:
         condition: service_healthy
