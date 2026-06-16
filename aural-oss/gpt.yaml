@@ -1,0 +1,30 @@
+metadata:
+  logo: Avatar_Default.svg
+  microsoft.voice-live.enabled: "false"
+object: agent.version
+id: agent:1
+name: agent
+version: "1"
+description: ""
+created_at: 1779256683
+definition:
+  kind: prompt
+  model: gpt-4.1-mini
+  instructions: You are an AI assistant that helps people find information.
+  temperature: 1
+  top_p: 1
+  tools:
+    - type: web_search
+status: active
+instance_identity:
+  principal_id: f5fd85d2-48fd-4ae5-919a-fc848c47a5de
+  client_id: f5fd85d2-48fd-4ae5-919a-fc848c47a5de
+blueprint:
+  principal_id: 0f04c032-5ff0-414b-a500-40c4f438fca7
+  client_id: 97422b00-be09-45e7-9b20-113375a5ce31
+blueprint_reference:
+  type: ManagedAgentIdentityBlueprint
+  blueprint_id: agent-c7e1e
+agent_guid: c7e1eb13-31c3-465c-961f-c16a96cbf248
+uri: https://dipanwitakundu02-6792-resource.services.ai.azure.com/api/projects/dipanwitakundu02-6792/openai/v1/responses
+key: 6cE8TNdccLP24sXFjTBpA2ofZRE6pOwkTNM6xcEAbKwHvtIFRXpAJQQJ99CEACHYHv6XJ3w3AAAAACOGruXd

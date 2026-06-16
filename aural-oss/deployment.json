@@ -1,0 +1,92 @@
+{
+  "id": "/subscriptions/cf9c9a10-291b-49d9-bce8-50c9e74ac328/resourceGroups/cred/providers/Microsoft.Resources/deployments/OpenAICreate-20260416101114",
+  "name": "OpenAICreate-20260416101114",
+  "type": "Microsoft.Resources/deployments",
+  "properties": {
+    "templateHash": "5014447906864998564",
+    "parameters": {
+      "name": {
+        "type": "String",
+        "value": "aivoicetexttospeech"
+      },
+      "location": {
+        "type": "String",
+        "value": "eastus"
+      },
+      "sku": {
+        "type": "String",
+        "value": "S0"
+      },
+      "tagValues": {
+        "type": "Object",
+        "value": {}
+      },
+      "virtualNetworkType": {
+        "type": "String",
+        "value": "None"
+      },
+      "vnet": {
+        "type": "Object",
+        "value": {}
+      },
+      "ipRules": {
+        "type": "Array",
+        "value": []
+      },
+      "privateEndpoints": {
+        "type": "Array",
+        "value": []
+      },
+      "privateDnsZone": {
+        "type": "String",
+        "value": "privatelink.openai.azure.com"
+      },
+      "existingVnetLinks": {
+        "type": "String",
+        "value": "[]"
+      },
+      "resourceGroupName": {
+        "type": "String",
+        "value": "cred"
+      },
+      "resourceGroupId": {
+        "type": "String",
+        "value": "/subscriptions/cf9c9a10-291b-49d9-bce8-50c9e74ac328/resourceGroups/cred"
+      },
+      "uniqueId": {
+        "type": "String",
+        "value": "88b77378-6d3f-49ff-91ed-f9451b428674"
+      },
+      "storedCompletionsDisabled": {
+        "type": "Bool",
+        "value": false
+      }
+    },
+    "mode": "Incremental",
+    "debugSetting": {
+      "detailLevel": "None"
+    },
+    "provisioningState": "Running",
+    "timestamp": "2026-04-16T04:44:21.3038453Z",
+    "duration": "PT13.7899585S",
+    "correlationId": "9df2276f-92d5-413d-8d1d-8906d3f42a6b",
+    "providers": [
+      {
+        "namespace": "Microsoft.CognitiveServices",
+        "resourceTypes": [
+          {
+            "resourceType": "accounts",
+            "locations": [
+              "eastus"
+            ]
+          }
+        ]
+      }
+    ],
+    "dependencies": [],
+    "validationLevel": "Template"
+  },
+  "tags": {
+    "primaryResourceId": "/subscriptions/cf9c9a10-291b-49d9-bce8-50c9e74ac328/resourceGroups/cred/providers/Microsoft.CognitiveServices/accounts/aivoicetexttospeech"
+  }
+}

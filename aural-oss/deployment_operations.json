@@ -1,0 +1,19 @@
+[
+  {
+    "id": "/subscriptions/cf9c9a10-291b-49d9-bce8-50c9e74ac328/resourceGroups/cred/providers/Microsoft.Resources/deployments/OpenAICreate-20260416101114/operations/53CD68DBA2D6F51F",
+    "operationId": "53CD68DBA2D6F51F",
+    "properties": {
+      "provisioningOperation": "Create",
+      "provisioningState": "Running",
+      "timestamp": "2026-04-16T04:44:32.4195991Z",
+      "duration": "PT6.8806474S",
+      "trackingId": "77932291-179e-4536-b34b-559942aa0cee",
+      "statusCode": "Created",
+      "targetResource": {
+        "id": "/subscriptions/cf9c9a10-291b-49d9-bce8-50c9e74ac328/resourceGroups/cred/providers/Microsoft.CognitiveServices/accounts/aivoicetexttospeech",
+        "resourceType": "Microsoft.CognitiveServices/accounts",
+        "resourceName": "aivoicetexttospeech"
+      }
+    }
+  }
+]
