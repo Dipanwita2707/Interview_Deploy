@@ -220,7 +220,9 @@ export async function POST(req: NextRequest) {
     inviteToken: string;
   };
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL && process.env.NEXT_PUBLIC_APP_URL.trim() !== ""
+    ? process.env.NEXT_PUBLIC_APP_URL
+    : "http://localhost:3000";
   const sessionUrl = `${appUrl}/i/invite/${inviteToken}/session`;
 
   return NextResponse.json({

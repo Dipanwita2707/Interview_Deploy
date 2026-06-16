@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://aural-ai.com";
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL && process.env.NEXT_PUBLIC_APP_URL.trim() !== ""
+  ? process.env.NEXT_PUBLIC_APP_URL
+  : "https://aural-ai.com";
 
 export default function robots(): MetadataRoute.Robots {
   return {

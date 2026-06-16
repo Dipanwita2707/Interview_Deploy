@@ -22,7 +22,9 @@ const spaceGrotesk = Space_Grotesk({
   variable: "--font-heading",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://aural-ai.com";
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL && process.env.NEXT_PUBLIC_APP_URL.trim() !== ""
+  ? process.env.NEXT_PUBLIC_APP_URL
+  : "https://aural-ai.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
